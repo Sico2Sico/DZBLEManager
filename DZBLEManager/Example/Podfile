@@ -5,9 +5,4 @@ platform :ios, '15.0'
 target 'DZBLEManager_Example' do
   pod 'DZBLEManager', :path => '../'
 
-  target 'DZBLEManager_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end
