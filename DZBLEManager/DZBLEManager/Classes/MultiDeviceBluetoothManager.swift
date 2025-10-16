@@ -33,17 +33,17 @@ public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
     private let protocolManager = BluetoothProtocolManager()
     
     /// 发现的设备
-    private var discoveredDevices: [UUID: BluetoothDevice] = [:]
+    public var discoveredDevices: [UUID: BluetoothDevice] = [:]
     
     /// 链接的设备
-    private var connectedDevices: [UUID: BluetoothDevice] = [:]
+    public var connectedDevices: [UUID: BluetoothDevice] = [:]
     
     private override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: .main)
     }
     
-    func startScanning() {
+    public func startScanning() {
         guard centralManager.state == .poweredOn else { return }
         discoveredDevices.removeAll()
         centralManager.scanForPeripherals(withServices: nil, options: nil)

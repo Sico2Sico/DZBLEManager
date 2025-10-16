@@ -12,6 +12,9 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		64DBA5F22EA0C8BB00C8AE4E /* QuickStartExample1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DBA5F12EA0C8BB00C8AE4E /* QuickStartExample1.swift */; };
+		64DBA5F32EA0C8BB00C8AE4E /* BasicOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DBA5EF2EA0C8BB00C8AE4E /* BasicOperations.swift */; };
+		64DBA5F42EA0C8BB00C8AE4E /* EventListeningExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DBA5F02EA0C8BB00C8AE4E /* EventListeningExamples.swift */; };
 		D33F73700EA9016AB0DFCFFB /* Pods_DZBLEManager_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA102D45504F522F3734CB6E /* Pods_DZBLEManager_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +32,9 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		64DBA5EF2EA0C8BB00C8AE4E /* BasicOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicOperations.swift; sourceTree = "<group>"; };
+		64DBA5F02EA0C8BB00C8AE4E /* EventListeningExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListeningExamples.swift; sourceTree = "<group>"; };
+		64DBA5F12EA0C8BB00C8AE4E /* QuickStartExample1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickStartExample1.swift; sourceTree = "<group>"; };
 		B9B46B76A1D5FD9FE44BF92E /* Pods_DZBLEManager_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DZBLEManager_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB996A79F2DBA8BEC0E040CE /* Pods-DZBLEManager_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DZBLEManager_Example.debug.xcconfig"; path = "Target Support Files/Pods-DZBLEManager_Example/Pods-DZBLEManager_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D6CF95D11CE5475EDFBAF381 /* Pods-DZBLEManager_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DZBLEManager_Tests.release.xcconfig"; path = "Target Support Files/Pods-DZBLEManager_Tests/Pods-DZBLEManager_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -84,6 +90,9 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				64DBA5EF2EA0C8BB00C8AE4E /* BasicOperations.swift */,
+				64DBA5F02EA0C8BB00C8AE4E /* EventListeningExamples.swift */,
+				64DBA5F12EA0C8BB00C8AE4E /* QuickStartExample1.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -257,6 +266,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				64DBA5F22EA0C8BB00C8AE4E /* QuickStartExample1.swift in Sources */,
+				64DBA5F32EA0C8BB00C8AE4E /* BasicOperations.swift in Sources */,
+				64DBA5F42EA0C8BB00C8AE4E /* EventListeningExamples.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
