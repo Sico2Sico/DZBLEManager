@@ -75,6 +75,8 @@ public class BluetoothDevice: NSObject, Identifiable, ObservableObject {
     public func updateConnectionState(_ state: DeviceConnectionState) {
         connectionState = state
         manager?.notifyEvent(.connectionStateChanged(self, state))
+        
+        /// 需要考虑断开的状态情况下 是否需要自动重连逻辑 
     }
     
     func discoverServices() {
