@@ -6,7 +6,7 @@
 //
 
 // MARK: - 连接状态
-enum DeviceConnectionState: Equatable {
+public enum DeviceConnectionState: Equatable {
     case disconnected
     case connecting
     case connected

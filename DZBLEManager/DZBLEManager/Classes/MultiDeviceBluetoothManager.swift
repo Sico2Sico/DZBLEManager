@@ -11,7 +11,7 @@ import Combine
 
 
 // MARK: - 蓝牙事件
-enum BluetoothEvent {
+public enum BluetoothEvent {
     case deviceDiscovered(BluetoothDevice)
     case deviceConnected(BluetoothDevice)
     case deviceDisconnected(BluetoothDevice)
@@ -24,7 +24,7 @@ enum BluetoothEvent {
 
 
 // MARK: - 管理器协议（解耦）
-protocol DeviceManagerProtocol: AnyObject {
+public protocol DeviceManagerProtocol: AnyObject {
     func notifyEvent(_ event: BluetoothEvent)
     func requestReconnect(device: BluetoothDevice)
 }
@@ -32,11 +32,14 @@ protocol DeviceManagerProtocol: AnyObject {
 
 // MARK: - 多设备管理器（简化版）
 public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
+
+    public static let shared = MultiDeviceBluetoothManager()
     
-    static let shared = MultiDeviceBluetoothManager()
-    
+    /// (私有）= 发射器，只有管理器能发送事件
     private let eventSubject = PassthroughSubject<BluetoothEvent, Never>()
-    var eventPublisher: AnyPublisher<BluetoothEvent, Never> {
+    
+    /// (公开）= 接收器，所有模块都能订阅
+    public var eventPublisher: AnyPublisher<BluetoothEvent, Never> {
         eventSubject.eraseToAnyPublisher()
     }
     
@@ -58,35 +61,34 @@ public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
         print("🔍 开始扫描设备...")
     }
     
-    func stopScanning() {
+    public func stopScanning() {
         centralManager.stopScan()
     }
     
-    func connect(device: BluetoothDevice) {
+    public func connect(device: BluetoothDevice) {
         device.updateConnectionState(.connecting)
         centralManager.connect(device.peripheral, options: nil)
     }
     
-    func disconnect(device: BluetoothDevice) {
+    public func disconnect(device: BluetoothDevice) {
         device.cleanup()
         connectedDevices.removeValue(forKey: device.id)
         centralManager.cancelPeripheralConnection(device.peripheral)
         device.updateConnectionState(.disconnected)
     }
     
-    func disconnectAll() {
+    public func disconnectAll() {
         for device in connectedDevices.values {
             disconnect(device: device)
         }
     }
     
     // MARK: - DeviceManagerProtocol
-    
-    func notifyEvent(_ event: BluetoothEvent) {
+    public func notifyEvent(_ event: BluetoothEvent) {
         eventSubject.send(event)
     }
     
-    func requestReconnect(device: BluetoothDevice) {
+    public func requestReconnect(device: BluetoothDevice) {
         device.updateConnectionState(.reconnecting)
         centralManager.cancelPeripheralConnection(device.peripheral)
         
