@@ -19,6 +19,7 @@ public protocol DeviceManagerProtocol: AnyObject {
 // MARK: - 多设备管理器（简化版）
 public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
 
+    /// shared
     public static let shared = MultiDeviceBluetoothManager()
     
     /// (私有）= 发射器，只有管理器能发送事件
@@ -32,11 +33,16 @@ public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
     private var centralManager: CBCentralManager!
     private let protocolManager = BluetoothProtocolManager()
     
+    /// 蓝牙系统状态
+    @Published public private(set) var bluetoothState: BluetoothSystemState = .unknown
+    
     /// 发现的设备
     public var discoveredDevices: [UUID: BluetoothDevice] = [:]
     
     /// 链接的设备
     public var connectedDevices: [UUID: BluetoothDevice] = [:]
+    
+    private var shouldAutoReconnect: Bool = false
     
     private override init() {
         super.init()
@@ -93,9 +99,35 @@ public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
 extension MultiDeviceBluetoothManager: CBCentralManagerDelegate {
     
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == .poweredOn {
-            print("✅ 蓝牙已开启")
+       
+        let newState: BluetoothSystemState
+                
+        switch central.state {
+        case .unknown:
+            newState = .unknown
+            
+        case .resetting:
+            newState = .resetting
+            
+        case .unsupported:
+            newState = .unsupported
+            
+        case .unauthorized:
+            newState = .unauthorized
+            
+        case .poweredOff:
+            newState = .poweredOff
+            
+        case .poweredOn:
+            newState = .poweredOn
+            
+        @unknown default:
+            newState = .unknown
         }
+        
+        // ⭐️ 处理状态变化
+        handleBluetoothStateChange(newState)
+
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -150,4 +182,144 @@ extension MultiDeviceBluetoothManager: CBCentralManagerDelegate {
         
         print("🔌 设备已断开: \(device.name)")
     }
+}
+
+
+// MARK: - 系统蓝牙总开关关闭的情况 处理
+extension MultiDeviceBluetoothManager  {
+    
+    /// 处理蓝牙状态变化
+        private func handleBluetoothStateChange(_ newState: BluetoothSystemState) {
+            let oldState = bluetoothState
+            bluetoothState = newState
+            
+            print("📡 蓝牙状态变化: \(oldState.description) → \(newState.description)")
+            
+            // 发布系统状态变化事件
+            eventSubject.send(.bluetoothSystemStateChanged(newState))
+            
+            switch newState {
+            case .poweredOff:
+                handleBluetoothPoweredOff()
+                
+            case .poweredOn:
+                handleBluetoothPoweredOn(from: oldState)
+                
+            case .unauthorized:
+                handleBluetoothUnauthorized()
+                
+            case .unsupported:
+                handleBluetoothUnsupported()
+                
+            case .resetting:
+                handleBluetoothResetting()
+                
+            case .unknown:
+                break
+            }
+        }
+        
+        /// 蓝牙关闭处理 ⭐️ 关键
+        private func handleBluetoothPoweredOff() {
+            print("🔴 蓝牙已关闭，清理所有设备...")
+            
+            // 1. 停止扫描
+            stopScanning()
+            
+            // 2. 保存当前已连接的设备（用于自动重连）
+            if shouldAutoReconnect {
+//                devicesBeforePowerOff = connectedDevices
+//                print("💾 已保存 \(devicesBeforePowerOff.count) 个设备用于自动重连")
+            }
+            
+            // 3. 更新所有已连接设备的状态为断开
+            let devicesToDisconnect = Array(connectedDevices.values)
+            for device in devicesToDisconnect {
+                // 清理设备资源（心跳、定时器等）
+                device.cleanup()
+                
+                // 更新设备状态
+                device.updateConnectionState(.disconnected)
+                
+                // 发送断开事件
+                eventSubject.send(.deviceDisconnected(device))
+                
+                print("🔌 [\(device.name)] 因蓝牙关闭而断开")
+            }
+            
+            // 4. 清空设备集合
+            connectedDevices.removeAll()
+//            syncConnectedDevicesList()
+            
+            // 5. 清空已发现设备
+            discoveredDevices.removeAll()
+//            syncDiscoveredDevicesList()
+            
+            // 6. 发送特殊事件
+            eventSubject.send(.bluetoothPoweredOff)
+            eventSubject.send(.allDevicesDisconnected)
+            
+            print("✅ 所有设备已清理完成")
+        }
+        
+        /// 蓝牙开启处理
+        private func handleBluetoothPoweredOn(from oldState: BluetoothSystemState) {
+            print("🟢 蓝牙已开启")
+            
+            eventSubject.send(.bluetoothPoweredOn)
+//            
+//            // 如果启用了自动重连，且之前有已连接的设备
+//            if shouldAutoReconnect && !devicesBeforePowerOff.isEmpty {
+//                print("🔄 检测到自动重连，准备重连 \(devicesBeforePowerOff.count) 个设备...")
+//                
+//                // 延迟1秒后开始重连
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+//                    self?.attemptAutoReconnect()
+//                }
+//            }
+        }
+        
+        /// 自动重连
+        private func attemptAutoReconnect() {
+            print("🔄 开始自动重连...")
+//            
+//            let devicesToReconnect = Array(devicesBeforePowerOff.values)
+//            
+//            for device in devicesToReconnect {
+//                print("🔄 重连: \(device.name)")
+//                connect(device: device)
+//                
+//                // 间隔100ms，避免同时连接太多设备
+//                Thread.sleep(forTimeInterval: 0.1)
+//            }
+//            
+//            // 清空保存的设备
+//            devicesBeforePowerOff.removeAll()
+        }
+        
+        /// 蓝牙未授权处理
+        private func handleBluetoothUnauthorized() {
+            print("⚠️ 蓝牙未授权，请在设置中允许应用使用蓝牙")
+            eventSubject.send(.bluetoothUnauthorized)
+            
+            // 清理所有设备
+            handleBluetoothPoweredOff()
+        }
+        
+        /// 设备不支持蓝牙
+        private func handleBluetoothUnsupported() {
+            print("❌ 设备不支持蓝牙")
+            
+            // 清理所有设备
+            handleBluetoothPoweredOff()
+        }
+        
+        /// 蓝牙重置中
+        private func handleBluetoothResetting() {
+            print("⚠️ 蓝牙正在重置...")
+            
+            // 清理所有设备
+            handleBluetoothPoweredOff()
+        }
+        
 }

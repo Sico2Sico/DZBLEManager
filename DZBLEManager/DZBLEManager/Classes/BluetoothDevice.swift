@@ -313,4 +313,7 @@ extension BluetoothDevice: CBPeripheralDelegate {
             updateConnectionState(.ready)
         }
     }
+    
+    
 }
+

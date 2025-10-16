@@ -7,6 +7,38 @@
 
 import Foundation
 
+
+// 蓝牙系统状态（区别于设备连接状态）
+public enum BluetoothSystemState: Equatable {
+    case unknown        // 未知状态
+    case resetting      // 重置中
+    case unsupported    // 设备不支持蓝牙
+    case unauthorized   // 未授权
+    case poweredOff     // 蓝牙已关闭
+    case poweredOn      // 蓝牙已开启
+    
+    var description: String {
+        switch self {
+        case .unknown: return "未知"
+        case .resetting: return "重置中"
+        case .unsupported: return "不支持蓝牙"
+        case .unauthorized: return "未授权"
+        case .poweredOff: return "蓝牙已关闭"
+        case .poweredOn: return "蓝牙已开启"
+        }
+    }
+    
+    var canScan: Bool {
+        return self == .poweredOn
+    }
+    
+    var isAvailable: Bool {
+        return self == .poweredOn
+    }
+}
+
+
+
 // MARK: - 蓝牙事件
 /// 蓝牙设备相关的所有事件类型
 /// 通过 Combine 的 Publisher 发布，支持多个模块同时订阅
@@ -379,4 +411,12 @@ public enum BluetoothEvent {
     ///     pauseDataSync(for: device)
     /// ```
     case heartbeatFailed(BluetoothDevice)
+    
+    
+    // ⭐️ 新增：系统状态事件
+    case bluetoothSystemStateChanged(BluetoothSystemState)
+    case bluetoothPoweredOff           // 蓝牙关闭（特殊事件）
+    case bluetoothPoweredOn            // 蓝牙开启（特殊事件）
+    case bluetoothUnauthorized         // 蓝牙未授权
+    case allDevicesDisconnected        // 所有设备已断开
 }

@@ -54,6 +54,22 @@ class EventListeningExamples {
             
         case .heartbeatFailed(let device):
             print("💔 [\(device.name)] 心跳异常")
+            
+        case .bluetoothSystemStateChanged(let systemState):
+            
+            break
+        case .bluetoothPoweredOff:
+            
+            break
+        case .bluetoothPoweredOn:
+            
+            break
+        case .bluetoothUnauthorized:
+            
+            break
+        case .allDevicesDisconnected:
+            
+            break
         }
     }
     
