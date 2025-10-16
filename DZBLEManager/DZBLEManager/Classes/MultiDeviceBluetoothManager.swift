@@ -9,20 +9,6 @@ import Foundation
 import CoreBluetooth
 import Combine
 
-
-// MARK: - 蓝牙事件
-public enum BluetoothEvent {
-    case deviceDiscovered(BluetoothDevice)
-    case deviceConnected(BluetoothDevice)
-    case deviceDisconnected(BluetoothDevice)
-    case deviceReady(BluetoothDevice)
-    case connectionStateChanged(BluetoothDevice, DeviceConnectionState)
-    case connectionQualityChanged(BluetoothDevice)
-    case heartbeatSuccess(BluetoothDevice)
-    case heartbeatFailed(BluetoothDevice)
-}
-
-
 // MARK: - 管理器协议（解耦）
 public protocol DeviceManagerProtocol: AnyObject {
     func notifyEvent(_ event: BluetoothEvent)
@@ -46,7 +32,10 @@ public class MultiDeviceBluetoothManager: NSObject, DeviceManagerProtocol {
     private var centralManager: CBCentralManager!
     private let protocolManager = BluetoothProtocolManager()
     
+    /// 发现的设备
     private var discoveredDevices: [UUID: BluetoothDevice] = [:]
+    
+    /// 链接的设备
     private var connectedDevices: [UUID: BluetoothDevice] = [:]
     
     private override init() {
