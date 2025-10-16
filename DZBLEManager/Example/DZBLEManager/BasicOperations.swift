@@ -40,9 +40,17 @@ class BasicOperations {
     /// 连接指定设备
     /// - Parameter device: 要连接的设备对象（从 deviceDiscovered 事件中获取）
     func connectDevice(_ device: BluetoothDevice) {
+
+        device.$connectionState
+               .receive(on: DispatchQueue.main)  // 1. 切换到主线程（重要！）
+               .sink { [weak self] state in      // 2. 使用 weak self 避免循环引用
+//                   self?.updateConnectionState(state)
+               }
+               .store(in: &cancellables)
+        
+        
         print("🔗 开始连接: \(device.name)")
         manager.connect(device: device)
-        
         // 连接后会自动触发以下事件序列：
         // 1. connectionStateChanged(.connecting)
         // 2. deviceConnected

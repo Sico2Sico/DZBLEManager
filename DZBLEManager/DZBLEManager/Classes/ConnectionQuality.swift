@@ -10,7 +10,7 @@ import CoreBluetooth
 import Combine
 
 // MARK: - 连接质量
-struct ConnectionQuality {
+public struct ConnectionQuality {
     var rssi: Int
     var lastHeartbeatTime: Date
     var heartbeatLatency: TimeInterval

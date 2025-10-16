@@ -17,8 +17,8 @@ public class BluetoothDevice: NSObject, Identifiable, ObservableObject {
     public let peripheral: CBPeripheral
     public let deviceType: DeviceType
     
-    @Published var connectionState: DeviceConnectionState = .disconnected
-    @Published var connectionQuality: ConnectionQuality
+    @Published public var connectionState: DeviceConnectionState = .disconnected
+    @Published public var connectionQuality: ConnectionQuality
     
     // 设备专属资源
     private var writeCharacteristic: CBCharacteristic?
@@ -72,7 +72,7 @@ public class BluetoothDevice: NSObject, Identifiable, ObservableObject {
     
     // MARK: - 公共接口
     
-    func updateConnectionState(_ state: DeviceConnectionState) {
+    public func updateConnectionState(_ state: DeviceConnectionState) {
         connectionState = state
         manager?.notifyEvent(.connectionStateChanged(self, state))
     }
