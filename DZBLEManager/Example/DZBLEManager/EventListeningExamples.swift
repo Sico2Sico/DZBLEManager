@@ -19,7 +19,6 @@ class EventListeningExamples {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: 4.1 监听所有事件
-    
     func listenAllEvents() {
         manager.eventPublisher
             .receive(on: DispatchQueue.main)  // 切换到主线程（更新UI）
