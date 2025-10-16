@@ -21,12 +21,12 @@ public class BluetoothDevice: NSObject, Identifiable, ObservableObject {
     @Published public var connectionQuality: ConnectionQuality
     
     // 设备专属资源
-    private var writeCharacteristic: CBCharacteristic?
-    private var notifyCharacteristic: CBCharacteristic?
-    private var responseBuffer = Data()
+    public var writeCharacteristic: CBCharacteristic?
+    public var notifyCharacteristic: CBCharacteristic?
+    public var responseBuffer = Data()
     
     // 依赖注入
-    private weak var manager: DeviceManagerProtocol?
+    public weak var manager: DeviceManagerProtocol?
     private let protocolManager: BluetoothProtocolManager
     private let commandQueue: CommandQueueManager
     private var heartbeatManager: HeartbeatManager?

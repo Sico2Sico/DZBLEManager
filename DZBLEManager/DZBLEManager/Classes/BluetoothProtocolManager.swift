@@ -9,7 +9,7 @@ import Foundation
 import CoreBluetooth
 import Combine
 
-class BluetoothProtocolManager {
+public class BluetoothProtocolManager {
     private let headerBytes: [UInt8] = [0xAA, 0x55]
     private let footerBytes: [UInt8] = [0x0D, 0x0A]
     
