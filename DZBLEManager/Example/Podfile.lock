@@ -1,0 +1,16 @@
+PODS:
+  - DZBLEManager (0.1.0)
+
+DEPENDENCIES:
+  - DZBLEManager (from `../`)
+
+EXTERNAL SOURCES:
+  DZBLEManager:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DZBLEManager: b35da0f14dff9b901bb7b095a139229520f2d993
+
+PODFILE CHECKSUM: fc4daf879a85276978b3aa574b91b0043732fab8
+
+COCOAPODS: 1.16.2
